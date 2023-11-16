@@ -12,7 +12,7 @@ Bude sa využívať komunikácia USART, I2C, SPI.
 - Klávesnica z PC
 
 ## Autori
-Damián Bombara,\n
-Patrícia Pálková,\n
-Mátyás Sátor-Érsek,\n
-Tomáš Stupeň.
+- Damián Bombara
+- Patrícia Pálková
+- Mátyás Sátor-Érsek
+- Tomáš Stupeň (C)
