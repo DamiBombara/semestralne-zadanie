@@ -6,8 +6,8 @@ Po stlačení určitých kláves na klávesnici sa spustí zvuk a LEDky sa rozsv
 Bude sa využívať komunikácia USART, I2C a SPI.
 
 ## Funkcionality programu
-1. Pomocou putty sa bude uživateľ prepínať medzi dvo módmy. 
-2. Prvý mód na základe stlačených tlačidiel na klávesnici vydáva zvuky.
+1. Pomocou PuTTY sa bude uživateľ prepínať medzi dvoma módmi. 
+2. Prvý mód na základe stlačených tlačidiel na klávesnici bude vydávať zvuky.
 3. Druhý mód prijíma súbor znakov, ktorý ak je v preddefinovanej forme zahrá konkrétnu melódiu.
 4. Počas celého behu programu LED reagujú na zahranú melódiu. 
 
@@ -16,7 +16,7 @@ Bude sa využívať komunikácia USART, I2C a SPI.
 - 7 segmentové spektrum LED
 - Klávesnica z PC
 - Zosilňovač
-- Reprák
+- Reproduktor
 
 ## Autori
 - Damián Bombara
