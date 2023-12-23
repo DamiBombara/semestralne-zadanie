@@ -20,20 +20,22 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string.h>
 
 
 
 // I2C slave device useful information
 
 char buffer[] = "Funguje komunikacia\n\r" ;
+char mod1[] = "chmod 1\n";
+char mod2[] = "chmod 2\n";
 uint8_t stringData[35];
 uint8_t mode;
 
+char tx_data[500];
 void SystemClock_Config(void);
 
 void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos);
-
-
 
 
 int main(void)
@@ -56,14 +58,19 @@ int main(void)
   mode = 1;
   playNWA(2);
 
+  sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\n\n"
+                   "DOSTUPNE MODY: 1 - NAPISTE RETAZEC POUZITELNYCH ZNAKOV A STLACTE ENTER\n"
+                   "               2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\n\n"
+                   "AKTUALNE NASTAVENY MOD: 1\n\n"
+                   "PRE ZMENENIE MODU POUZITE PRIKAZ: chmod 1 alebo chmod 2\n\n"
+                   "POUZITELNE ZNAKY: 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o' \n\n");
+  USART2_PutBuffer(tx_data, sizeof(tx_data));
 
   while (1)
   {
-
-	 //playNWA();
+	  //playNWA(1);
 	  //USART2_PutBuffer(buffer, sizeof(buffer));
 	  //LL_mDelay(2000);
-
   }
 }
 
@@ -118,6 +125,21 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
 	USART2_PutBuffer(stringData, sizeof(stringData));
 
 
+}
+
+void changeMode(uint8_t* data, uint16_t len, uint16_t pos) {
+
+	for(uint8_t j = 0; j < len; j++){
+		stringData[j] = (*(data+j));
+	}
+
+	if (strcmp(stringData, mod1) == 0) {
+		mode = 1;
+	}
+
+	if (strcmp(stringData, mod2) == 0) {
+		mode = 2;
+	}
 }
 
 /**
