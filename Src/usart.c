@@ -135,7 +135,7 @@ void MX_USART2_UART_Init(void)
 }
 
 
-void USART2_PutBuffer(uint8_t *buffer, uint8_t length)
+void USART2_PutBuffer(uint8_t *buffer, uint32_t length)
 {
 	LL_DMA_SetMemoryAddress(DMA1, LL_DMA_CHANNEL_7, (uint32_t)buffer);
 

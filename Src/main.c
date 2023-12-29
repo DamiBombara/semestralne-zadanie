@@ -27,12 +27,12 @@
 // I2C slave device useful information
 
 char buffer[] = "Funguje komunikacia\n\r" ;
-char mod1[] = "chmod 1\n";
-char mod2[] = "chmod 2\n";
+uint8_t mod1[] = "chmod 1\n";
+uint8_t mod2[] = "chmod 2\n";
 uint8_t stringData[35];
 uint8_t mode;
 
-char tx_data[500];
+char tx_data[1000];
 void SystemClock_Config(void);
 
 void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos);
@@ -40,31 +40,32 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos);
 
 int main(void)
 {
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-  NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+	NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
-  SystemClock_Config();
+	SystemClock_Config();
 
-  MUSinit();
-  MX_USART2_UART_Init();
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_USART2_UART_Init();
+	MUSinit();
+	MX_USART2_UART_Init();
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_USART2_UART_Init();
 
-  USART2_RegisterCallback(proccesDmaData);
+	USART2_RegisterCallback(proccesDmaData);
 
-  mode = 1;
-  playNWA(2);
+	mode = 1;
+	playNWA(2);
 
-  sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\n\n"
-                   "DOSTUPNE MODY: 1 - NAPISTE RETAZEC POUZITELNYCH ZNAKOV A STLACTE ENTER\n"
-                   "               2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\n\n"
-                   "AKTUALNE NASTAVENY MOD: 1\n\n"
-                   "PRE ZMENENIE MODU POUZITE PRIKAZ: chmod 1 alebo chmod 2\n\n"
-                   "POUZITELNE ZNAKY: 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o' \n\n");
-  USART2_PutBuffer(tx_data, sizeof(tx_data));
+	sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\r\n\n"
+	                    "DOSTUPNE MODY: \r\n"
+	                    "1 - NAPISTE RETAZEC POUZITELNYCH ZNAKOV A STLACTE ENTER\r\n"
+	                    "2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\r\n\n"
+	                    "AKTUALNE NASTAVENY MOD: 1\r\n\n"
+	                    "PRE ZMENENIE MODU POUZITE PRIKAZ: chmod 1 alebo chmod 2\r\n\n"
+	                    "POUZITELNE ZNAKY: 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o'\r\n\n");
+    USART2_PutBuffer(tx_data, sizeof(tx_data));
 
   while (1)
   {
