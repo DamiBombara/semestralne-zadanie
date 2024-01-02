@@ -27,8 +27,8 @@
 // I2C slave device useful information
 
 char buffer[] = "Funguje komunikacia\n\r" ;
-uint8_t mod1[] = "chmod 1\n";
-uint8_t mod2[] = "chmod 2\n";
+char mod1[] = "chmod 1";
+char mod2[] = "chmod 2";
 uint8_t stringData[35];
 uint8_t mode;
 
@@ -56,7 +56,7 @@ int main(void)
 	USART2_RegisterCallback(proccesDmaData);
 
 	mode = 1;
-	playNWA(2);
+	//playNWA(2);
 
 	sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\r\n\n"
 	                    "DOSTUPNE MODY: \r\n"
@@ -64,7 +64,20 @@ int main(void)
 	                    "2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\r\n\n"
 	                    "AKTUALNE NASTAVENY MOD: 1\r\n\n"
 	                    "PRE ZMENENIE MODU POUZITE PRIKAZ: chmod 1 alebo chmod 2\r\n\n"
-	                    "POUZITELNE ZNAKY: 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o'\r\n\n");
+	                    "POUZITELNE ZNAKY: \r\n"
+	                    "• a - C7  \r\n"
+	                    "• s - C#7 \r\n"
+	                    "• d - D7  \r\n"
+	                    "• f - D#7 \r\n"
+	                    "• g - E7  \r\n"
+	                    "• h - F7  \r\n"
+	                    "• j - F#7 \r\n"
+	                    "• k - G7  \r\n"
+	                    "• l - G#7 \r\n"
+	                    "• u - A7  \r\n"
+	                    "• i - A#7 \r\n"
+	                    "• o - B7  \r\n\n");
+
     USART2_PutBuffer(tx_data, sizeof(tx_data));
 
   while (1)
@@ -112,37 +125,34 @@ void SystemClock_Config(void)
   LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_HSI);
 }
 
-void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
-
-
-	for(uint8_t j = 0; j < len; j++){
-		stringData[j] = (*(data+j));
+void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos) {
+	uint8_t j = 0;
+	for (uint8_t i = 0; i < len; i++) {
+		if (*(data+i) == '\n' || *(data+i) == '\r') continue;
+		stringData[j] = (*(data+i));
+		j++;
 	}
-
-	stringData[len] = '\0';
-
-	playString(stringData, 300, 100);
-
-	USART2_PutBuffer(stringData, sizeof(stringData));
-
-
-}
-
-void changeMode(uint8_t* data, uint16_t len, uint16_t pos) {
-
-	for(uint8_t j = 0; j < len; j++){
-		stringData[j] = (*(data+j));
-	}
+	stringData[j] = '\0';
 
 	if (strcmp(stringData, mod1) == 0) {
 		mode = 1;
+		char buff[77];
+		sprintf(buff, "Aktivovali ste mod: 1 - NAPISTE RETAZEC POUZITELNYCH ZNAKOV A STLACTE ENTER\r\n");
+		USART2_PutBuffer(buff, sizeof(buff));
 	}
 
-	if (strcmp(stringData, mod2) == 0) {
+	else if (strcmp(stringData, mod2) == 0) {
 		mode = 2;
+		char buff[95];
+		sprintf(buff, "Aktivovali ste mod: 2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\r\n");
+		USART2_PutBuffer(buff, sizeof(buff));
+	}
+
+	else {
+		if (mode == 1) playString(stringData, 300, 100);
+		if (mode == 2) playString(stringData, 300, 100);
 	}
 }
-
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
