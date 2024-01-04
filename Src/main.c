@@ -29,6 +29,7 @@
 char buffer[] = "Funguje komunikacia\n\r" ;
 char mod1[] = "chmod 1";
 char mod2[] = "chmod 2";
+char easterEgg[] = "eazy-e";
 uint8_t stringData[35];
 uint8_t mode;
 
@@ -76,7 +77,8 @@ int main(void)
 	                    "• l - G#7 \r\n"
 	                    "• u - A7  \r\n"
 	                    "• i - A#7 \r\n"
-	                    "• o - B7  \r\n\n");
+	                    "• o - B7  \r\n\n"
+						"Easter egg pri mode 1: Kto zalozil znamu skupinu N.W.A? (Napoveda: je to fakt 'eazy')\r\n\n");
 
     USART2_PutBuffer(tx_data, sizeof(tx_data));
 
@@ -146,6 +148,13 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos) {
 		char buff[95];
 		sprintf(buff, "Aktivovali ste mod: 2 - KLIKNITE JEDEN Z POUZITELNYCH ZNAKOV A PREHRA SA VAM TON (PIANO)\r\n");
 		USART2_PutBuffer(buff, sizeof(buff));
+	}
+
+	else if (strcmp(stringData, easterEgg) == 0 && mode == 1) {
+		char buff[39];
+		sprintf(buff, "Cruising down the street in my 6-4...\r\n\n");
+		USART2_PutBuffer(buff, sizeof(buff));
+		playNWA(2);
 	}
 
 	else {
