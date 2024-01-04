@@ -115,3 +115,36 @@ void playNWA(int num){
 		  LL_mDelay(700);
 	  }
 }
+
+
+void startTone(uint16_t frequency){
+    uint32_t SystemCoreCloc = 8000000;
+    // Nastavenie časovača TIM6 pre danú frekvenciu
+    TIM6->PSC = 0x0000;
+    TIM6->ARR = SystemCoreCloc / (frequency * SINE_SAMPLES);
+    
+    int timeout = 10;
+
+    // Spustenie časovača a triggeru pre DAC
+    TIM6->CR2 |= (0x2 << TIM_CR2_MMS_Pos);
+    TIM6->CR1 |= TIM_CR1_CEN;
+    DAC1->CR |= DAC_CR_TEN1;
+
+    // Spustenie DMA
+    DMA1_Channel3->CCR |= DMA_CCR_EN;
+
+}
+
+void stopTone(){
+    DMA1_Channel3->CCR &= ~DMA_CCR_EN;
+    TIM6->CR1 &= ~TIM_CR1_CEN;
+}
+
+int isPianoKey(char k){
+	for(int i = 0; i < 12; i++){
+		if(k == keys[i]){
+			return 1;
+		}
+	}
+	return 0;
+}

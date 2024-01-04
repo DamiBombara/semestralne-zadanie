@@ -11,7 +11,8 @@
 #include <stdlib.h>
 
 #define _AMP(x) ( x / 2 )
-
+#define CHANGE_KEY 'c'
+#define STOP_SIGNAL '-'
 
 void MUSinit();
 
@@ -22,7 +23,11 @@ void playNWA(int num);
 
 int returnFreguency(char a);
 
+void startTone(uint16_t frequency);
 
+void stopTone();
+
+int isPianoKey(char k);
 
 #ifndef INC_MUSIC_H_
 #define INC_MUSIC_H_
