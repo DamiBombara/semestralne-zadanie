@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #define _AMP(x) ( x / 2 )
-#define CHANGE_KEY 'c'
+#define CHANGE_MODE 'c'
 #define STOP_SIGNAL '-'
 
 void MUSinit();

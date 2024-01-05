@@ -30,7 +30,10 @@ char buffer[] = "Funguje komunikacia\n\r" ;
 uint8_t mod1[] = "chmod 1\n";
 uint8_t mod2[] = "chmod 2\n";
 uint8_t stringData[35];
+uint8_t dataAct[3];
+char new[] = "\n\r";
 uint8_t mode;
+uint8_t playing;
 
 char pianoNotes[] = {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o'};
 
@@ -59,6 +62,7 @@ int main(void)
 	USART2_RegisterCallback(proccesDmaData);
 
 	mode = 1;
+	playing = 0;
 	//playNWA(2);
 
 	sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\r\n\n"
@@ -68,7 +72,7 @@ int main(void)
 	                    "AKTUALNE NASTAVENY MOD: 1\r\n\n"
 	                    "PRE ZMENENIE MODU POUZITE PRIKAZ: chmod 1 alebo chmod 2\r\n\n"
 	                    "POUZITELNE ZNAKY: 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o'\r\n\n");
-    //USART2_PutBuffer(tx_data, sizeof(tx_data));
+    USART2_PutBuffer(tx_data, sizeof(tx_data));
 
   while (1)
   {
@@ -120,46 +124,47 @@ void SystemClock_Config(void)
 
 void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
 
-  static uint8_t playing = 0;
+  static uint32_t i = 0;
+
 
   if(mode == 1){
-    for(uint8_t j = 0; j < len; j++){
-      stringData[j] = (*(data+j));
+
+	 dataAct[0] = (*(data));
+	 stringData[i] = (*(data));
+	 stringData[i+1]  = '\0';
+     i++;
+
+     dataAct[1]  = '\0';
+
+    if ((*(data)) == '\r'){
+    	i = 0;
+    	USART2_PutBuffer(new, sizeof(new));
+    	if(!strcmp("chmod\r",stringData))
+    	{
+    	      mode = 2;
+    	}
+    	else
+    	{
+    	      playString(stringData, 300, 100);
+    	}
+
+    }else {
+    	USART2_PutBuffer(dataAct, 2);
     }
 
-    stringData[len] = '\0';
-
-    if(strcmp("chmod",stringData)){
-      mode = 2;
-    }
-    else{
-      playString(stringData, 300, 100);
-    }
-
-    
-
-    //USART2_PutBuffer(stringData, sizeof(stringData));
 
   }
 
   else if(mode == 2){
     char tone = (char) data[0];
 
-    if(isPianoKey(tone)){
-      if(!playing){
-        startTone(tone);
-        playing = 1;
-      }
-    }
-    else if(tone == STOP_SIGNAL){
-      stopTone();
-      playing = 0;
-    }
-    else if(tone == CHANGE_KEY){
+    playTone(returnFreguency(tone), 300);
+
+    if(tone == CHANGE_MODE){
       mode = 1;
     }
-	
 
+}
 }
 
 void processPianoKeys(uint8_t* data, uint16_t len, uint16_t pos){
