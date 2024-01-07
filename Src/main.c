@@ -31,6 +31,7 @@ uint8_t mod1[] = "chmod 1\n";
 uint8_t mod2[] = "chmod 2\n";
 uint8_t stringData[35];
 uint8_t mode;
+uint8_t playing;
 
 char pianoNotes[] = {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'u', 'i', 'o'};
 
@@ -59,6 +60,7 @@ int main(void)
 	USART2_RegisterCallback(proccesDmaData);
 
 	mode = 1;
+	playing = 0;
 	//playNWA(2);
 
 	sprintf(tx_data, "*****ZAHRATIE FAREBNEJ MELODIE - SEMESTRALNE ZADANIE*****\r\n\n"
@@ -120,16 +122,17 @@ void SystemClock_Config(void)
 
 void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
 
-  static uint8_t playing = 0;
-
   if(mode == 1){
-    for(uint8_t j = 0; j < len; j++){
-      stringData[j] = (*(data+j));
-    }
+	  uint8_t j = 0;
+	  	for (uint8_t i = 0; i < len; i++) {
+	  		if (*(data+i) == '\n' || *(data+i) == '\r') continue;
+	  		stringData[j] = (*(data+i));
+	  		j++;
+	  	}
+	  	stringData[j] = '\0';
 
-    stringData[len] = '\0';
 
-    if(strcmp("chmod",stringData)){
+    if(strcmp("chmod",stringData) == 0){
       mode = 2;
     }
     else{
@@ -143,18 +146,13 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
   }
 
   else if(mode == 2){
-    char tone = (char) data[0];
+      char tone = (char) data[0];
 
-    if(isPianoKey(tone)){
-      if(!playing){
-        startTone(tone);
-        playing = 1;
+      playTone(returnFreguency(tone), 300);
+
+      if(tone == 'c'){
+        mode = 1;
       }
-    }
-    else if(tone == STOP_SIGNAL){
-      stopTone();
-      playing = 0;
-    }
     else if(tone == CHANGE_KEY){
       mode = 1;
     }
