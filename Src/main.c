@@ -160,6 +160,7 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
     }
 	
 
+  }
 }
 
 void processPianoKeys(uint8_t* data, uint16_t len, uint16_t pos){
