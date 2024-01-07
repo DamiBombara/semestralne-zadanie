@@ -13,7 +13,7 @@ key_pressed = False
 
 ser = serial.Serial()
 ser.baudrate = 115200
-ser.port = 'COM3'
+ser.port = sys.argv[1]
 ser.open()
 
 
