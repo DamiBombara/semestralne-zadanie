@@ -175,7 +175,7 @@ void USART2_CheckDmaReception(void)
 }
 
 
-void MX_DMA_Init(void)
+void MX_DMA_Init1(void)
 {
   /* Init with LL driver */
   /* DMA controller clock enable */

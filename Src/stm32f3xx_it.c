@@ -21,7 +21,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f3xx_it.h"
-#include "usart.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -57,13 +56,13 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern DMA_HandleTypeDef hdma_tim1_ch1;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
 
 /******************************************************************************/
-/*           Cortex-M4 Processor Interruption and Exception Handlers          */ 
+/*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
   * @brief This function handles Non maskable interrupt.
@@ -185,7 +184,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
-  
+  HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -199,42 +198,33 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles DMA1 channel7 global interrupt.
+  * @brief This function handles DMA1 channel2 global interrupt.
   */
-void DMA1_Channel7_IRQHandler(void)
+void DMA1_Channel2_IRQHandler(void)
 {
-	if(LL_DMA_IsActiveFlag_TC7(DMA1) == SET)
-	{
-		LL_DMA_ClearFlag_TC7(DMA1);
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
 
-		while(LL_USART_IsActiveFlag_TC(USART2) == RESET);
-		LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_7);
-	}
+  /* USER CODE END DMA1_Channel2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_tim1_ch1);
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 1 */
 }
 
-void DMA1_Channel6_IRQHandler(void)
+/**
+  * @brief This function handles I2C1 event global interrupt / I2C1 wake-up interrupt through EXT line 23.
+  */
+void I2C1_EV_IRQHandler(void)
 {
-	if(LL_DMA_IsActiveFlag_TC6(DMA1) == SET)
-	{
-		USART2_CheckDmaReception();
-		LL_DMA_ClearFlag_TC6(DMA1);
-	}
-	else if(LL_DMA_IsActiveFlag_HT6(DMA1) == SET)
-	{
-		USART2_CheckDmaReception();
-		LL_DMA_ClearFlag_HT6(DMA1);
-	}
+  /* USER CODE BEGIN I2C1_EV_IRQn 0 */
+
+  /* USER CODE END I2C1_EV_IRQn 0 */
+
+  /* USER CODE BEGIN I2C1_EV_IRQn 1 */
+
+  /* USER CODE END I2C1_EV_IRQn 1 */
 }
 
-
-void USART2_IRQHandler(void)
-{
-	if(LL_USART_IsActiveFlag_IDLE(USART2))
-	{
-		USART2_CheckDmaReception();
-		LL_USART_ClearFlag_IDLE(USART2);
-	}
-}
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

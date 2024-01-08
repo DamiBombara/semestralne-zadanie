@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : I2C.h
+  * File Name          : dma.c
   * Description        : This file provides code for the configuration
-  *                      of the I2C instances.
+  *                      of all the requested memory to memory DMA transfers.
   ******************************************************************************
   * @attention
   *
@@ -16,36 +16,39 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __i2c_H
-#define __i2c_H
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "dma.h"
 
-/* USER CODE BEGIN Includes */
+/* USER CODE BEGIN 0 */
 
-/* USER CODE END Includes */
+/* USER CODE END 0 */
 
-/* USER CODE BEGIN Private defines */
+/*----------------------------------------------------------------------------*/
+/* Configure DMA                                                              */
+/*----------------------------------------------------------------------------*/
 
-/* USER CODE END Private defines */
+/* USER CODE BEGIN 1 */
 
-void MX_I2C1_Init(void);
+/* USER CODE END 1 */
 
-/* USER CODE BEGIN Prototypes */
-uint8_t i2c_master_read_byte(uint8_t slave_address, uint8_t register_address);
-void i2c_send_byte(uint8_t slave_address, uint8_t register_address, uint8_t data);
-uint8_t i2c_master_read_bytes(uint8_t slave_address, uint8_t register_address, uint8_t* buffer, uint8_t length);
-/* USER CODE END Prototypes */
+/**
+  * Enable DMA controller clock
+  */
+void MX_DMA_Init(void)
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
 
-#ifdef __cplusplus
+  /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+
 }
-#endif
-#endif /*__ i2c_H */
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 /**
   * @}
