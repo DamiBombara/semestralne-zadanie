@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+
+
 #define _AMP(x) ( x / 2 )
 #define CHANGE_KEY 'c'
 #define STOP_SIGNAL '-'
