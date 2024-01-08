@@ -148,11 +148,19 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
   else if(mode == 2){
       char tone = (char) data[0];
 
-      playTone(returnFreguency(tone), 300);
+      /*playTone(returnFreguency(tone), 300);
 
       if(tone == 'c'){
         mode = 1;
-      }
+      }*/
+
+    if(isPianoKey(tone)){
+    	startTone(returnFreguency(tone));
+    }
+    else if(tone == STOP_SIGNAL){
+    	stopTone(tone);
+    }
+
     else if(tone == CHANGE_KEY){
       mode = 1;
     }
