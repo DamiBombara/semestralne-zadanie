@@ -60,10 +60,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-
-
-
 /* USER CODE END 0 */
 
 /**
@@ -74,8 +70,10 @@ char buffer[] = "Funguje komunikacia\n\r" ;
 char mod1[] = "chmod 1";
 char mod2[] = "chmod 2";
 char easterEgg[] = "eazy-e";
+char lastKey;
 uint8_t stringData[35];
 uint8_t mode;
+int flag =1;
 
 char tx_data[1000];
 void SystemClock_Config(void);
@@ -112,11 +110,10 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+  	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
 
-  	NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+  	NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_2);
 
   	SystemClock_Config();
 
@@ -124,7 +121,7 @@ int main(void)
   	MX_USART2_UART_Init();
   	MX_GPIO_Init();
   	MX_DMA_Init();
-
+  	MX_USART2_UART_Init();
 
   	USART2_RegisterCallback(proccesDmaData);
 
@@ -153,6 +150,11 @@ int main(void)
   						"Easter egg pri mode 1: Kto zalozil znamu skupinu N.W.A? (Napoveda: je to fakt 'eazy')\r\n\n");
 
       USART2_PutBuffer(tx_data, sizeof(tx_data));
+
+
+      keyLED(returnFreguency('s'));
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -160,7 +162,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  if (!flag){
+		  keyLED(returnFreguency(lastKey));
+		  flag = 1;
+	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -236,6 +241,7 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
 
   else if(mode == 2){
       char tone = (char) data[0];
+      lastKey = tone;
 
       /*playTone(returnFreguency(tone), 300);
 
@@ -244,10 +250,13 @@ void proccesDmaData(uint8_t* data, uint16_t len, uint16_t pos){
       }*/
 
     if(isPianoKey(tone)){
+    	//keyLED(returnFreguency(tone));
+    	flag = 0;
     	startTone(returnFreguency(tone));
     }
     else if(tone == STOP_SIGNAL){
     	stopTone(tone);
+
     }
 
     else if(tone == CHANGE_KEY){

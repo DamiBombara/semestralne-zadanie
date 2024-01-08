@@ -177,17 +177,18 @@ void USART2_CheckDmaReception(void)
 
 void MX_DMA_Init1(void)
 {
-  /* Init with LL driver */
-  /* DMA controller clock enable */
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
 
-  /* DMA interrupt init */
-  /* DMA1_Channel6_IRQn interrupt configuration */
-  NVIC_SetPriority(DMA1_Channel6_IRQn, 0);
-  NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-  /* DMA1_Channel7_IRQn interrupt configuration */
-  NVIC_SetPriority(DMA1_Channel7_IRQn, 0);
-  NVIC_EnableIRQ(DMA1_Channel7_IRQn);
+	 /* Init with LL driver */
+	  /* DMA controller clock enable */
+	//LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
+
+	  /* DMA interrupt init */
+	  /* DMA1_Channel6_IRQn interrupt configuration */
+	  //NVIC_SetPriority(DMA1_Channel6_IRQn, 4);
+	  //NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+	  /* DMA1_Channel7_IRQn interrupt configuration */
+	  //NVIC_SetPriority(DMA1_Channel7_IRQn, 4);
+	  //NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 

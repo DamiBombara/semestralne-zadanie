@@ -103,6 +103,9 @@ void WS2812_Send (void)
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_1, (uint32_t *)pwmData, indx);
 	while (!datasentflag){};
 	datasentflag = 0;
+
+
+
 }
 
 void Set_LED (int LEDnum, int Red, int Green, int Blue)
@@ -144,9 +147,30 @@ void MUSinit() {
 	LL_mDelay(100);
 
 
-	    Set_LED(0, colors[1].R, colors[1].G,colors[1].B);
-	    Set_Brightness(45);
-	    WS2812_Send();
+	Set_LED(0, colors[1].R, colors[1].G,colors[1].B);
+	Set_Brightness(45);
+	WS2812_Send();
+}
+
+void keyLED(int freq){
+
+
+	int i = retrunNum(freq);
+	for (int j = 0; j < 8; j++ ){
+		if (freq == 0){
+				Set_LED(j, 0, 0,0);
+							    Set_Brightness(45);
+							    WS2812_Send();
+			}else {
+
+				Set_LED(j, colors[i].R, colors[i].G,colors[i].B);
+							    Set_Brightness(45);
+							    WS2812_Send();
+			}
+
+	}
+
+
 }
 
 void playTone(uint16_t frequency, uint32_t time){
@@ -162,10 +186,7 @@ void playTone(uint16_t frequency, uint32_t time){
 
     // Spustenie DMA
     DMA1_Channel3->CCR |= DMA_CCR_EN;
-    int i = retrunNum(frequency);
-    Set_LED(0, colors[i].R, colors[i].G,colors[i].B);
-    Set_Brightness(45);
-    WS2812_Send();
+
 
     // Prehrávanie tónu na x sekund
     LL_mDelay(time); // Funkcia na oneskorenie
@@ -173,8 +194,7 @@ void playTone(uint16_t frequency, uint32_t time){
     // Zastavenie DMA a časovača
     DMA1_Channel3->CCR &= ~DMA_CCR_EN;
     TIM6->CR1 &= ~TIM_CR1_CEN;
-    Set_LED(0, 0,0,0);
-           WS2812_Send();
+
 }
 
 void playString(uint8_t *string, uint32_t timePlay, uint32_t pause){
@@ -239,9 +259,7 @@ void startTone(uint16_t frequency){
     
     int timeout = 10;
     int i = retrunNum(frequency);
-       Set_LED(0, colors[i].R, colors[i].G,colors[i].B);
-       Set_Brightness(45);
-       WS2812_Send();
+
 
     // Spustenie časovača a triggeru pre DAC
     TIM6->CR2 |= (0x2 << TIM_CR2_MMS_Pos);
@@ -256,8 +274,7 @@ void startTone(uint16_t frequency){
 void stopTone(){
     DMA1_Channel3->CCR &= ~DMA_CCR_EN;
     TIM6->CR1 &= ~TIM_CR1_CEN;
-    Set_LED(0, 0,0,0);
-           WS2812_Send();
+
 }
 
 int isPianoKey(char k){
