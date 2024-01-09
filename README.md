@@ -3,10 +3,10 @@
 
 Tento projekt využíva mikrokontrolér STM32F303K8, LEDky a klávesnicu z PC na vytvorenie konzolovej aplikácie. Konzolová aplikácia bude mať dva módy. 
 Po stlačení určitých kláves na klávesnici sa spustí zvuk a LEDky sa rozsvietia podľa melódie.
-Bude sa využívať komunikácia USART, I2C a SPI.
+Bude sa využívať komunikácia USART spolu s DMA. Reproduktor sa využíva časovač TIM6 a LEDky sa využívajú časovač TIM2.
 
 ## Funkcionality programu
-1. Pomocou PuTTY sa bude uživateľ prepínať medzi dvoma módmi. 
+1. Pomocou konzolovej aplikácie sa bude uživateľ prepínať medzi dvoma módmi. 
 2. Prvý mód na základe stlačených tlačidiel na klávesnici bude vydávať zvuky.
 3. Druhý mód prijíma súbor znakov, ktorý ak je v preddefinovanej forme zahrá konkrétnu melódiu.
 4. Počas celého behu programu LED reagujú na zahranú melódiu. 
